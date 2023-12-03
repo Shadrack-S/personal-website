@@ -1,25 +1,64 @@
-import logo from './logo.svg';
-import './App.css';
+import {
+  createBrowserRouter,
+  Route, 
+  createRoutesFromElements,
+  RouterProvider} from "react-router-dom";
+// Pages
+import About from "./Pages/About";
+import Home from "./Pages/Home";
+import Faq from "./Pages/help/Faq";
+import Contact, { contactAction } from "./Pages/help/Contact";
+import CareerDetails, { careerDetailsLoader } from "./Pages/careers/CareerDetails";
+import Carerrs, {careersLoader} from "./Pages/careers/Careers"
+import CareersError from "./Pages/careers/CareersError";
+// Layout
+import RootLayout from "./layouts/RootLayout";
+import HelpLayout from "./layouts/HelpLayout";
+import CareersLayout from "./layouts/CareersLayout"
+import NotFound from "./Pages/NotFound";
+
+
+
+// Routes
+const router =createBrowserRouter(
+  createRoutesFromElements(
+    <Route path='/' element={<RootLayout/>}>
+        <Route index element={<Home/>}/>
+        <Route path="about" element={<About/>}/>
+        <Route path="help" element={<HelpLayout/>}>
+          <Route path= "faq" element={<Faq/>}/> 
+          <Route path= "Contact" element={<Contact/>} action={contactAction}/> 
+        </Route>
+
+        <Route path="careers" element={<CareersLayout />} errorElement={<CareersError/>} >
+        <Route 
+          index 
+          element={< Carerrs />} 
+          loader={careersLoader} 
+         
+        />
+
+        <Route
+        path =":id"
+        element={<CareerDetails/>}
+        loader={careerDetailsLoader}
+        
+        />
+
+      </Route>
+
+
+        <Route path="*"element={<NotFound/>}/>
+      </Route>
+
+  )
+)
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+   
+    <RouterProvider router={router}/>
+   
   );
 }
-
-export default App;
+export default App
